@@ -7,7 +7,7 @@ public class LinkedList<T> implements Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new ListIterator<T>();
+        return new ListIterator();
     }
 
     private static class Node<T> {
@@ -92,18 +92,22 @@ public class LinkedList<T> implements Iterable<T> {
         prev.next = tmp.next;
     }
 
-    class ListIterator<T> implements Iterator<T> {
+
+
+    class ListIterator implements Iterator<T> {
+
+        Node<T> tempRoot = root;
 
         @Override
         public boolean hasNext() {
-            return root != null;
+            return tempRoot != null;
         }
 
         @Override
         public T next() {
 
-            T temp = (T) root.item;
-            root = root.next;
+            T temp = tempRoot.item;
+            tempRoot = tempRoot.next;
             return temp;
         }
     }

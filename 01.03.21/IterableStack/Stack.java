@@ -6,7 +6,7 @@ public class Stack<T> implements Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new StackIterator<T>();
+        return new StackIterator();
     }
 
 
@@ -44,18 +44,19 @@ public class Stack<T> implements Iterable<T> {
         return head.value;
     }
 
-    class StackIterator<T> implements Iterator<T> {
+    class StackIterator implements Iterator<T> {
 
+        Node<T> tempHead = head;
 
         @Override
         public boolean hasNext() {
-            return head != null;
+            return tempHead != null;
         }
 
         @Override
         public T next() {
-            T temp = (T) head.value;
-            head = head.next;
+            T temp = tempHead.value;
+            tempHead = tempHead.next;
             return temp;
         }
     }
