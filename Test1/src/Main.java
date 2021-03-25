@@ -1,43 +1,85 @@
 import java.util.ArrayList;
-import java.util.List;
 import java.io.*;
+import java.util.Comparator;
+import java.util.TreeSet;
 
 public class Main {
 
-    public static void main(String[] args) {
+    static ArrayList<Buyer> buyers = new ArrayList<>();
 
-        List<Buyer> buyers = new ArrayList<>();
-        List<City> cities = new ArrayList<>();
-        List<String> str = new ArrayList<>();
+    static void addOrder(String name, String city, String item, int count) {
+        Buyer buyer = getBuyer(name);
+        buyer.addOrder(city, item, count);
+    }
+
+    static Buyer getBuyer(String name) {
+        for (Buyer buyer : buyers)
+            if (buyer.getName().equals(name)) {
+                return buyer;
+            }
+
+        buyers.add(new Buyer(name));
+        return getBuyer(name);
+    }
+
+    static void nameFirst(){
+        BuyerByOrdersCountComparator ordersCountComparator = new BuyerByOrdersCountComparator();
+        BuyerByCityCountComparator cityCountComparator = new BuyerByCityCountComparator();
+        BuyerByNameComparator nameComparator = new BuyerByNameComparator();
+        Comparator<Buyer> comparator1 = nameComparator.thenComparing(cityCountComparator).thenComparing(ordersCountComparator);
+        TreeSet<Buyer> nameSort = new TreeSet<>(comparator1);
+        nameSort.addAll(buyers);
+        try {
+            FileOutputStream fos = new FileOutputStream("sortedByNames.txt");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            for (Buyer buyer : nameSort)
+                oos.writeObject(buyer.toString());
+
+            fos.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void ordersFirst(){
+        BuyerByOrdersCountComparator ordersCountComparator = new BuyerByOrdersCountComparator();
+        BuyerByCityCountComparator cityCountComparator = new BuyerByCityCountComparator();
+        BuyerByNameComparator nameComparator = new BuyerByNameComparator();
+        Comparator<Buyer> comparator2 = ordersCountComparator.thenComparing(cityCountComparator).thenComparing(nameComparator);
+        TreeSet<Buyer> ordersCountSort = new TreeSet<>(comparator2);
+        ordersCountSort.addAll(buyers);
+        try {
+            FileOutputStream fos = new FileOutputStream("sortedByOrders.txt");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            for (Buyer buyer : ordersCountSort)
+                oos.writeObject(buyer.toString());
+
+            fos.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public static void main(String[] args) {
 
         try (BufferedReader reader = new BufferedReader(new FileReader("orders.txt"))) {
             String s;
             while ((s = reader.readLine()) != null) {
-                str.add(s);
+                String[] str = s.split("\\|");
+                addOrder(str[0], str[1], str[2], Integer.parseInt(str[3]));
             }
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
-        for (int i = 0; i < str.size(); i++) {
-            String[] s = str.get(i).split("\\|");
-            Order order = new Order(s[2], Integer.parseInt(s[3]));
-            City city = new City(s[1], order);
-            Buyer buyer = new Buyer(s[0], city);
-            if (buyers.size() != 0) {
-                for (int j = 0; j < buyers.size(); j++) {
-                    if (buyers.get(i).getName().equals(buyer.getName())) {
-                        int size1 = buyers
-                        for (int n = 0; n < size1; n++) {
-                            ArrayList<Order> orders =
-                            if (cities.get(i).getName().equals(city.getName()))
-                                for (int m = 0; m <)
-                        }
-                    }
-                }
-            }
-            else {cities.add(city); buyers.add(buyer);}
-        }
+        for (Buyer buyer : buyers) System.out.println(buyer);
+        
+        ordersFirst();
+        nameFirst();
     }
 }
