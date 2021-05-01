@@ -57,10 +57,10 @@ public class WarehouseTests {
 
     @Test
     public void removeOrderTestFailed() {
-
-        Order p = warehouse.getOrder("phone");
-
-        assertNull(p);
+    
+        warehouse.removeOrder("phone");
+        
+        assertEquals(2, saver.orders.size());
     }
 
     @Test
