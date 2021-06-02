@@ -24,7 +24,7 @@ public class Main {
         }
 
         public T read(int id) throws NoSuchElementException {
-            if (id > items.size() || id < 0) throw new NoSuchElementException("Элемент отсутствует");
+            if (id > items.size() - 1 || id < 0) throw new NoSuchElementException("Элемент отсутствует");
             return items.get(id);
         }
 
